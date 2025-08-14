@@ -4,8 +4,22 @@ namespace Kingbes\Libui;
 
 use \FFI\CData;
 
+/**
+ * 窗口类
+ */
 class Window extends Base
 {
+    /**
+     * 获取窗口标题
+     *
+     * @param CData $window
+     * @return string
+     */
+    public static function title(CData $window): string
+    {
+        return self::ffi()->uiWindowTitle($window);
+    }
+
     /**
      * 创建窗口
      *

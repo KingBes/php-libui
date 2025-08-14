@@ -2,6 +2,9 @@
 
 namespace Kingbes\Libui;
 
+/**
+ * 应用类
+ */
 class App extends Base
 {
     /**
