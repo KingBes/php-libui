@@ -36,7 +36,7 @@ Box::append($box, $btn01, false);
 // 按钮点击事件
 Button::onClicked($btn01, function ($btn01) use ($window) {
     echo "按钮点击\n";
-    Window::msgBox($window, "提示", "你这是要bangbangbang？");
+    Window::msgBox($window, "提示", "世界上最好的语言PHP~");
 });
 
 // 显示控件

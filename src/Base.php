@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace Kingbes\Libui;
 
-use \FFI\CData;
-
 abstract class Base
 {
     // private \FFI $ffi;

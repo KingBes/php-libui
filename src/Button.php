@@ -56,4 +56,113 @@ class Button extends Base
             $callback($button);
         }, null);
     }
+
+    /**
+     * 设置字体按钮
+     *
+     * @param CData $b 字体按钮句柄
+     * @param CData $desc 字体描述符
+     * @return void
+     */
+    public static function font(CData $b, CData $desc): void
+    {
+        self::ffi()->uiFontButtonFont($b, $desc);
+    }
+
+    /**
+     * 字体按钮字体改变事件
+     *
+     * @param CData $b 字体按钮句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function onFontChanged(CData $btn, callable $callback): void
+    {
+        self::ffi()->uiFontButtonOnChanged(
+            $b,
+            function ($b, $d) use ($callback, $btn) {
+                $callback($btn);
+            },
+            null
+        );
+    }
+
+    /**
+     * 创建字体按钮
+     *
+     * @return CData
+     */
+    public static function createFont(): CData
+    {
+        return self::ffi()->uiNewFontButton();
+    }
+
+    /**
+     * 释放字体按钮
+     *
+     * @param CData $desc 字体描述符句柄
+     * @return void
+     */
+    public static function freeFont(CData $desc): void
+    {
+        self::ffi()->uiFreeFontButtonFont($desc);
+    }
+
+    /**
+     * 颜色按钮
+     *
+     * @param CData $b 颜色按钮句柄
+     * @param float $r 红色
+     * @param float $g 绿色
+     * @param float $b 蓝色
+     * @param float $a 透明度
+     * @return void
+     */
+    public static function color(CData $btn, float $r, float $g, float $b, float $a): void
+    {
+        self::ffi()->uiColorButtonColor($btn, $r, $g, $b, $a);
+    }
+
+    /**
+     * 设置颜色按钮颜色
+     *
+     * @param CData $btn 颜色按钮句柄
+     * @param float $r 红色
+     * @param float $g 绿色
+     * @param float $b 蓝色
+     * @param float $a 透明度
+     * @return void
+     */
+    public static function setColor(CData $btn, float $r, float $g, float $b, float $a): void
+    {
+        self::ffi()->uiColorButtonSetColor($btn, $r, $g, $b, $a);
+    }
+
+    /**
+     * 颜色按钮颜色改变事件
+     *
+     * @param CData $btn 颜色按钮句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function colorOnChanged(CData $btn, callable $callback): void
+    {
+        self::ffi()->uiColorButtonOnChanged(
+            $btn,
+            function ($b, $d) use ($callback, $btn) {
+                $callback($btn);
+            },
+            null
+        );
+    }
+
+    /**
+     * 创建颜色按钮
+     *
+     * @return CData
+     */
+    public static function createColor(): CData
+    {
+        return self::ffi()->uiNewColorButton();
+    }
 }
