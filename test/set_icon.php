@@ -1,47 +1,19 @@
-# php-libui
-
-⭐ PHP-FFI 绑定 libui，实现跨平台 GUI 编程。
-
-`libui` 库是一个跨平台的 GUI 库,功能强大。
-
-文档后续会持续更新,欢迎star,issue,pr~
-
-## [English](./README-EN.md)
-
-## 依赖
-
-- PHP 8.2+
-- PHP-FFI 扩展
-
-## 平台
-
-- Windows Vista SP2 平台更新或更高版本 x86_64
-- macOS OS X 10.8 或更高版本 x86_64
-- Linux GTK+ 3.10 或更高版本 x86_64
-
-## 安装
-
-```bash
-composer require kingbes/libui
-```
-
-## 示例
-
-```php
 <?php
 
 require dirname(__DIR__) . "/vendor/autoload.php";
 
-use Kingbes\Libui\App; // 应用
-use Kingbes\Libui\Window; // 窗口
-use Kingbes\Libui\Control; // 控件
-use Kingbes\Libui\Box; // 容器
-use Kingbes\Libui\Button; // 按钮
+use Kingbes\Libui\App;
+use Kingbes\Libui\Window;
+use Kingbes\Libui\Control;
+use Kingbes\Libui\Box;
+use Kingbes\Libui\Button;
 
 // 初始化应用
 App::init();
 // 创建窗口
 $window = Window::create("窗口", 640, 480, 0);
+// 设置窗口图标
+// Window::setIcon($window, __DIR__ . "/demo.png");
 // 窗口设置边框
 Window::setMargined($window, true);
 // 窗口关闭事件
@@ -71,7 +43,3 @@ Button::onClicked($btn01, function ($btn01) use ($window) {
 Control::show($window);
 // 主循环
 App::main();
-
-```
-
-![示例代码](./test/demo.png)

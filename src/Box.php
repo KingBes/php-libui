@@ -24,6 +24,17 @@ class Box extends Base
     }
 
     /**
+     * 获取子元素数量
+     *
+     * @param CData $box 盒子句柄
+     * @return int
+     */
+    public static function numChildren(CData $box): int
+    {
+        return self::ffi()->uiBoxNumChildren($box);
+    }
+
+    /**
      * 删除子元素
      *
      * @param CData $box 盒子句柄
