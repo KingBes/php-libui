@@ -46,7 +46,7 @@ $window = Window::create("Demo Window", 640, 480, 0);
 Window::setMargined($window, true);
 // Window close event
 Window::onClosing($window, function ($window) {
-    echo "窗口关闭";
+    echo "Exit application\n";
     // Exit application
     App::quit();
     // Return 1: Success, Return 0: Failed
