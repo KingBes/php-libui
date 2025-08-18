@@ -75,3 +75,8 @@ App::main();
 ```
 
 ![示例代码](./test/demo.png)
+
+## 打包
+
+[Bny.php](https://github.com/workbunny/bny.php) 是一个 PHP 管理工具，可以将PHP项目打包为`单个可执行文件`。
+

@@ -76,3 +76,8 @@ App::main();
 ```
 
 ![Example](./test/demo.png)
+
+## Packing
+
+[Bny.php](https://github.com/workbunny/bny.php) is a PHP management tool that can package PHP projects into `single executable files`.
+
