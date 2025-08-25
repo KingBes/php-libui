@@ -16,7 +16,7 @@ abstract class Base
      * @return \FFI
      * @throws RuntimeException Missing libui dependencies.
      */
-    protected static function ffi(): \FFI
+    public static function ffi(): \FFI
     {
         if (!isset(self::$ffi)) {
             $headerPath = __DIR__ . '/Libui.h';

@@ -177,17 +177,6 @@ class Draw extends Base
     }
 
     /**
-     * 路径是否结束
-     *
-     * @param CData $path 路径句柄
-     * @return bool 路径是否结束
-     */
-    public static function pathEnded(CData $path): bool
-    {
-        return self::ffi()->uiDrawPathEnded($path);
-    }
-
-    /**
      * 路径结束
      *
      * @param CData $path 路径句柄

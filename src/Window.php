@@ -3,7 +3,6 @@
 namespace Kingbes\Libui;
 
 use \FFI\CData;
-use Kingbes\Libui\Icon\Icon;
 
 /**
  * 窗口类
@@ -169,55 +168,6 @@ class Window extends Base
             return $callback($window);
         };
         self::ffi()->uiWindowOnClosing($window, $c_callback, null);
-    }
-
-    /**
-     * 窗口焦点改变事件
-     *
-     * @param CData $window 窗口句柄
-     * @param callable $callback 回调函数
-     * @return void
-     */
-    public static function onFocusChanged(CData $window, callable $callback): void
-    {
-        $c_callback = function ($w, $d) use ($window, $callback) {
-            return $callback($window);
-        };
-        self::ffi()->uiWindowOnFocusChanged($window, $c_callback, null);
-    }
-
-    /**
-     * 窗口是否有焦点
-     *
-     * @param CData $window 窗口句柄
-     * @return bool
-     */
-    public static function focused(CData $window): bool
-    {
-        return self::ffi()->uiWindowFocused($window);
-    }
-
-    /**
-     * 窗口是否可调整大小
-     *
-     * @param CData $window 窗口句柄
-     * @return bool
-     */
-    public static function resizeable(CData $window): bool
-    {
-        return self::ffi()->uiWindowResizeable($window);
-    }
-
-    /**
-     * 设置窗口是否可调整大小
-     *
-     * @param CData $window 窗口句柄
-     * @param bool $resizeable 是否可调整大小
-     * @return void
-     */
-    public static function setResizeable(CData $window, bool $resizeable): void
-    {
-        self::ffi()->uiWindowSetResizeable($window, $resizeable ? 1 : 0);
     }
 
     /**

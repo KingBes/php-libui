@@ -53,31 +53,7 @@ int uiControlEnabledToUser(uiControl *);
 void uiUserBugCannotSetParentOnToplevel(const char *type);
 
 // window
-typedef void *uiWindowsControl;
-typedef void *HMENU;
-typedef struct HWND__
-{
-    int unused;
-} HWND;
-typedef struct uiWindow
-{
-    uiWindowsControl c;
-    HWND hwnd;
-    HMENU menubar;
-    uiControl *child;
-    int shownOnce;
-    int visible;
-    int (*onClosing)(struct uiWindow *, void *);
-    void *onClosingData;
-    int margined;
-    int hasMenubar;
-    void (*onContentSizeChanged)(struct uiWindow *, void *);
-    void *onContentSizeChangedData;
-    int changingSize;
-    int fullscreen;
-    void *fsPrevPlacement;
-    int borderless;
-} uiWindow;
+typedef struct uiWindow uiWindow;
 char *uiWindowTitle(uiWindow *w);
 void uiWindowSetTitle(uiWindow *w, const char *title);
 void uiWindowContentSize(uiWindow *w, int *width, int *height);
@@ -86,15 +62,11 @@ int uiWindowFullscreen(uiWindow *w);
 void uiWindowSetFullscreen(uiWindow *w, int fullscreen);
 void uiWindowOnContentSizeChanged(uiWindow *w, void (*f)(uiWindow *, void *), void *data);
 void uiWindowOnClosing(uiWindow *w, int (*f)(uiWindow *w, void *data), void *data);
-void uiWindowOnFocusChanged(uiWindow *w, void (*f)(uiWindow *sender, void *senderData), void *data);
-int uiWindowFocused(uiWindow *w);
 int uiWindowBorderless(uiWindow *w);
 void uiWindowSetBorderless(uiWindow *w, int borderless);
 void uiWindowSetChild(uiWindow *w, uiControl *child);
 int uiWindowMargined(uiWindow *w);
 void uiWindowSetMargined(uiWindow *w, int margined);
-int uiWindowResizeable(uiWindow *w);
-void uiWindowSetResizeable(uiWindow *w, int resizeable);
 uiWindow *uiNewWindow(const char *title, int width, int height, int hasMenubar);
 
 const char *uiOpenFile(uiWindow *parent);
@@ -105,7 +77,6 @@ void uiMsgBoxError(uiWindow *parent, const char *title, const char *description)
 // box
 typedef struct uiBox uiBox;
 void uiBoxAppend(uiBox *b, uiControl *child, int stretchy);
-int uiBoxNumChildren(uiBox *b);
 void uiBoxDelete(uiBox *b, int index);
 int uiBoxPadded(uiBox *b);
 void uiBoxSetPadded(uiBox *b, int padded);
@@ -147,9 +118,6 @@ uiLabel *uiNewLabel(const char *text);
 
 // Tab
 typedef struct uiTab uiTab;
-int uiTabSelected(uiTab *t);
-void uiTabSetSelected(uiTab *t, int index);
-void uiTabOnSelected(uiTab *t, void (*f)(uiTab *sender, void *senderData), void *data);
 void uiTabAppend(uiTab *t, const char *name, uiControl *c);
 void uiTabInsertAt(uiTab *t, const char *name, int before, uiControl *c);
 void uiTabDelete(uiTab *t, int index);
@@ -178,11 +146,7 @@ uiSpinbox *uiNewSpinbox(int min, int max);
 typedef struct uiSlider uiSlider;
 int uiSliderValue(uiSlider *s);
 void uiSliderSetValue(uiSlider *s, int value);
-int uiSliderHasToolTip(uiSlider *s);
-void uiSliderSetHasToolTip(uiSlider *s, int hasToolTip);
 void uiSliderOnChanged(uiSlider *s, void (*f)(uiSlider *s, void *data), void *data);
-void uiSliderOnReleased(uiSlider *s, void (*f)(uiSlider *sender, void *senderData), void *data);
-void uiSliderSetRange(uiSlider *s, int min, int max);
 uiSlider *uiNewSlider(int min, int max);
 
 // ProgressBar
@@ -199,10 +163,6 @@ uiSeparator *uiNewVerticalSeparator(void);
 // Combobox
 typedef struct uiCombobox uiCombobox;
 void uiComboboxAppend(uiCombobox *c, const char *text);
-void uiComboboxInsertAt(uiCombobox *c, int index, const char *text);
-void uiComboboxDelete(uiCombobox *c, int index);
-void uiComboboxClear(uiCombobox *c);
-int uiComboboxNumItems(uiCombobox *c);
 int uiComboboxSelected(uiCombobox *c);
 void uiComboboxSetSelected(uiCombobox *c, int n);
 void uiComboboxOnSelected(uiCombobox *c, void (*f)(uiCombobox *c, void *data), void *data);
@@ -403,7 +363,7 @@ void uiDrawPathCloseFigure(uiDrawPath *p);
 
 // TODO effect of these when a figure is already started
 void uiDrawPathAddRectangle(uiDrawPath *p, double x, double y, double width, double height);
-int uiDrawPathEnded(uiDrawPath *p);
+
 void uiDrawPathEnd(uiDrawPath *p);
 
 void uiDrawStroke(uiDrawContext *c, uiDrawPath *path, uiDrawBrush *b, uiDrawStrokeParams *p);
@@ -491,10 +451,6 @@ struct uiFontDescriptor
     int Italic;
     int Stretch;
 };
-
-void uiLoadControlFont(uiFontDescriptor *f);
-void uiFreeFontDescriptor(uiFontDescriptor *desc);
-
 typedef struct uiDrawTextLayout uiDrawTextLayout;
 typedef struct uiDrawTextLayoutParams uiDrawTextLayoutParams;
 struct uiDrawTextLayoutParams
@@ -556,7 +512,6 @@ uiColorButton *uiNewColorButton(void);
 // Form
 typedef struct uiForm uiForm;
 void uiFormAppend(uiForm *f, const char *label, uiControl *c, int stretchy);
-int uiFormNumChildren(uiForm *f);
 void uiFormDelete(uiForm *f, int index);
 int uiFormPadded(uiForm *f);
 void uiFormSetPadded(uiForm *f, int padded);
@@ -650,25 +605,4 @@ void uiTableAppendButtonColumn(uiTable *t,
                                const char *name,
                                int buttonModelColumn,
                                int buttonClickableModelColumn);
-int uiTableHeaderVisible(uiTable *t);
-void uiTableHeaderSetVisible(uiTable *t, int visible);
 uiTable *uiNewTable(uiTableParams *params);
-void uiTableOnRowClicked(uiTable *t, void (*f)(uiTable *t, int row, void *data), void *data);
-void uiTableOnRowDoubleClicked(uiTable *t, void (*f)(uiTable *t, int row, void *data), void *data);
-void uiTableHeaderSetSortIndicator(uiTable *t, int column, int indicator); // uiSortIndicator
-int uiTableHeaderSortIndicator(uiTable *t, int column);                    // uiSortIndicator
-void uiTableHeaderOnClicked(uiTable *t, void (*f)(uiTable *sender, int column, void *senderData), void *data);
-int uiTableColumnWidth(uiTable *t, int column);
-void uiTableColumnSetWidth(uiTable *t, int column, int width);
-int uiTableGetSelectionMode(uiTable *t);            // uiTableSelectionMode
-void uiTableSetSelectionMode(uiTable *t, int mode); // uiTableSelectionMode
-void uiTableOnSelectionChanged(uiTable *t, void (*f)(uiTable *t, void *data), void *data);
-typedef struct uiTableSelection uiTableSelection;
-struct uiTableSelection
-{
-    int NumRows; //!< Number of selected rows.
-    int *Rows;   //!< Array containing selected row indices, NULL on empty selection.
-};
-uiTableSelection *uiTableGetSelection(uiTable *t);
-void uiTableSetSelection(uiTable *t, uiTableSelection *sel);
-void uiFreeTableSelection(uiTableSelection* s);

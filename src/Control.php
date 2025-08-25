@@ -204,26 +204,4 @@ class Control extends Base
     {
         self::ffi()->uiUserBugCannotSetParentOnToplevel($type);
     }
-
-    /**
-     * 加载控件字体
-     *
-     * @param CData $font 字体句柄
-     * @return void
-     */
-    public static function loadFont(CData $font): void
-    {
-        self::ffi()->uiLoadControlFont($font);
-    }
-
-    /**
-     * 释放控件字体
-     *
-     * @param CData $font 字体句柄
-     * @return void
-     */
-    public static function freeFontDescriptor(CData $font): void
-    {
-        self::ffi()->uiFreeFontDescriptor($font);
-    }
 }
