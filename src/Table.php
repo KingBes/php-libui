@@ -23,11 +23,14 @@ class Table extends Base
     /**
      * 获取表格值类型
      *
-     * @param CData $v 表格值
+     * @param CData|null $v 表格值
      * @return TableValueType 表格值类型
      */
-    public static function getValueType(CData $v): TableValueType
+    public static function getValueType(CData|null $v): TableValueType
     {
+        if (!isset($v) || $v == null) {
+            return TableValueType::Null;
+        }
         return TableValueType::from(self::ffi()->uiTableValueGetType($v));
     }
 
@@ -286,9 +289,18 @@ class Table extends Base
      * @param int $checkboxModelColumn 复选框模型列
      * @return void
      */
-    public static function appendCheckboxColumn(CData $model, string $name, int $checkboxModelColumn): void
-    {
-        self::ffi()->uiTableAppendCheckboxColumn($model, $name, $checkboxModelColumn);
+    public static function appendCheckboxColumn(
+        CData $model,
+        string $name,
+        int $checkboxModelColumn,
+        int $checkboxEditableModelColumn = -1
+    ): void {
+        self::ffi()->uiTableAppendCheckboxColumn(
+            $model,
+            $name,
+            $checkboxModelColumn,
+            $checkboxEditableModelColumn
+        );
     }
 
     /**
@@ -332,11 +344,15 @@ class Table extends Base
      * @param int $buttonClickableModelColumn 按钮可点击模型列
      * @return void
      */
-    public static function appendButtonColumn(CData $model, string $name, int $buttonModelColumn, int $buttonClickableModelColumn): void
-    {
+    public static function appendButtonColumn(
+        CData $model,
+        string $name,
+        int $buttonModelColumn,
+        int $buttonClickableModelColumn
+    ): void {
         self::ffi()->uiTableAppendButtonColumn($model, $name, $buttonModelColumn, $buttonClickableModelColumn);
     }
-    
+
     /**
      * 表格创建
      *

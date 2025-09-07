@@ -11,4 +11,5 @@ enum TableValueType: int
     case Image = 1;
     case Int = 2;
     case Color = 3;
+    case Null = 4;
 }

@@ -23,22 +23,31 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
+$name = ["小李", "小成", "多多"];
+$age = ["18", "20", "32"];
+$btn = ["编辑", "编辑", "编辑"];
+$checkbox = [1, 0, 1];
+
 // 创建表格模型处理程序
 $modelHandler = Table::modelHandler(
     3, // 列数
     TableValueType::String, // 列类型
     3, // 行数
-    function ($handler, $row, $column) { // 单元格值获取回调
-        $name = ["小李", "小成", "多多"];
-        $age = ["18", "20", "32"];
-        $btn = ["编辑", "编辑", "编辑"];
-
+    function ($handler, $row, $column) use (&$name, &$age, &$btn, &$checkbox) { // 单元格值获取回调
         if ($column == 0) {
             return Table::createValueStr($name[$row]);
         } else if ($column == 1) {
             return Table::createValueStr($age[$row]);
-        } else {
+        } else if ($column == 2) {
             return Table::createValueStr($btn[$row]);
+        } else {
+            return Table::createValueInt($checkbox[$row]);
+        }
+    },
+    function ($handler, $row, $column, $v) use (&$checkbox) { // 单元格值设置回调
+        
+        if ($column == 3) { // 复选框列
+            $checkbox[$row] = Table::valueInt($v); // 获取复选框值
         }
     }
 );
@@ -51,7 +60,9 @@ Table::appendTextColumn($table, "姓名", 0, -1);
 // 表格追加文本列
 Table::appendTextColumn($table, "年龄", 1, -1);
 // 表格追加按钮列
-Table::appendButtonColumn($table, "操作", 2, -1);
+Table::appendButtonColumn($table, "操作", 2, 1);
+// 表格追加复选框列
+Table::appendCheckboxColumn($table, "选择", 3, 0);
 
 Window::setChild($window, $table); // 设置窗口子元素
 
