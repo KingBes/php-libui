@@ -87,4 +87,18 @@ class App extends Base
         };
         self::ffi()->uiQueueMain($c_callable, null);
     }
+
+    /**
+     * 列队主循环注销事件
+     *
+     * @param callable:int $callable
+     * @return void
+     */
+    public static function onShouldQuit(callable $callable): void
+    {
+        $c_callable = function ($data) use ($callable) {
+            return $callable($data);
+        };
+        self::ffi()->uiOnShouldQuit($c_callable, null);
+    }
 }
