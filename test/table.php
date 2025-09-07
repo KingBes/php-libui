@@ -47,10 +47,8 @@ $modelHandler = Table::modelHandler(
 );
 // 创建表格模型
 $tableModel = Table::createModel($modelHandler);
-// 创建表格参数
-$tableParams = Table::params($tableModel, -1);
 // 创建表格
-$table = Table::create($tableParams);
+$table = Table::create($tableModel, -1);
 // 表格追加文本列
 Table::appendTextColumn($table, "姓名", 0, -1);
 // 表格追加文本列
