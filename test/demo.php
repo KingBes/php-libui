@@ -20,7 +20,7 @@ Window::onClosing($window, function ($window) {
     // 退出应用
     App::quit();
     // 返回1：奏效,返回0：不奏效
-    return 1;
+    return 1;   
 });
 
 // 创建水平容器

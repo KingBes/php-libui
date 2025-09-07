@@ -135,11 +135,38 @@ class Table extends Base
     /**
      * 创建表格模型处理程序
      *
-     * @return CData
+     * @param int $NumColumns 列数
+     * @param TableValueType $ColumnType 列类型
+     * @param int $NumRows 行数
+     * @param callable{CData} $CellValue 单元格值回调
+     * @param callable|null $SetCellValue 单元格值设置回调
+     * 
+     * @return CData 表格模型处理程序
      */
-    public static function modelHandler(): CData
-    {
-        return self::ffi()->new("uiTableModelHandler");
+    public static function modelHandler(
+        int $NumColumns,
+        TableValueType $ColumnType,
+        int $NumRows,
+        callable $CellValue,
+        callable|null $SetCellValue = null
+    ): CData {
+        $handler = self::ffi()->new("uiTableModelHandler");
+        $handler->NumColumns = function ($h, $m) use ($NumColumns) {
+            return $NumColumns;
+        };
+        $handler->ColumnType = function ($h, $m, $i) use ($ColumnType) {
+            return $ColumnType->value;
+        };
+        $handler->NumRows = function ($h, $m) use ($NumRows) {
+            return $NumRows;
+        };
+        $handler->CellValue = function ($h, $m, $row, $column) use ($handler, $CellValue) {
+            return $CellValue($handler, $row, $column);
+        };
+        $handler->SetCellValue = function ($h, $m, $row, $column, $v) use ($handler, $SetCellValue) {
+            $SetCellValue($handler, $row, $column, $v);
+        };
+        return $handler;
     }
 
     /**
@@ -150,7 +177,8 @@ class Table extends Base
      */
     public static function createModel(CData $handler): CData
     {
-        return self::ffi()->uiNewTableModel($handler);
+        $c_handler = self::ffi()->cast("uiTableModelHandler [1]", $handler);
+        return self::ffi()->uiNewTableModel($c_handler);
     }
 
     /**
@@ -196,12 +224,26 @@ class Table extends Base
      * @param string $name 列名称
      * @param int $textModelColumn 文本模型列
      * @param int $textEditableModelColumn 可编辑文本模型列
-     * @param CData $textParams 文本列可选参数
+     * @param int $textParams 文本列可选参数
      * @return void
      */
-    public static function appendTextColumn(CData $model, string $name, int $textModelColumn, int $textEditableModelColumn, CData $textParams): void
-    {
-        self::ffi()->uiTableAppendTextColumn($model, $name, $textModelColumn, $textEditableModelColumn, $textParams);
+    public static function appendTextColumn(
+        CData $model,
+        string $name,
+        int $textModelColumn,
+        int $textEditableModelColumn,
+        int $textParams = -1
+    ): void {
+        $c_textParamsStruct = self::ffi()->new("uiTableTextColumnOptionalParams");
+        $c_textParamsStruct->ColorModelColumn = $textParams;
+        $c_textParams = self::ffi()->cast("uiTableTextColumnOptionalParams [1]", $c_textParamsStruct);
+        self::ffi()->uiTableAppendTextColumn(
+            $model,
+            $name,
+            $textModelColumn,
+            $textEditableModelColumn,
+            $c_textParams
+        );
     }
 
     /**
@@ -290,6 +332,23 @@ class Table extends Base
     }
 
     /**
+     * 表格请求参数
+     *
+     * @param CData $model 表格模型
+     * @param integer $RowBackgroundColorModelColumn 行背景颜色模型列
+     * @return CData 表格参数
+     */
+    public static function params(
+        CData $model,
+        int $RowBackgroundColorModelColumn
+    ): CData {
+        $params =  self::ffi()->new("uiTableParams");
+        $params->Model = $model;
+        $params->RowBackgroundColorModelColumn = $RowBackgroundColorModelColumn;
+        return $params;
+    }
+
+    /**
      * 表格创建
      *
      * @param CData $params 表格参数
@@ -297,6 +356,7 @@ class Table extends Base
      */
     public static function create(CData $params): CData
     {
-        return self::ffi()->uiNewTable($params);
+        $c_params = self::ffi()->cast("uiTableParams[1]", $params);
+        return self::ffi()->uiNewTable($c_params);
     }
 }
