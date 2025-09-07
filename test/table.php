@@ -5,7 +5,6 @@ require dirname(__DIR__) . "/vendor/autoload.php";
 use Kingbes\Libui\App;
 use Kingbes\Libui\Window;
 use Kingbes\Libui\Control;
-use Kingbes\Libui\Box;
 use Kingbes\Libui\Table;
 use Kingbes\Libui\TableValueType;
 
@@ -24,11 +23,6 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
-// 创建水平容器
-$box = Box::newVerticalBox();
-Box::setPadded($box, true); // 设置边距
-Window::setChild($window, $box); // 设置窗口子元素
-
 // 创建表格模型处理程序
 $modelHandler = Table::modelHandler(
     2,
@@ -37,11 +31,14 @@ $modelHandler = Table::modelHandler(
     function ($handler, $row, $column) {
         $name = ["小李", "小成", "多多"];
         $age = ["18", "20", "32"];
+        $btn = ["编辑", "编辑", "编辑"];
 
         if ($column == 0) {
-            return Table::createValueStr((string)$name[$row]);
+            return Table::createValueStr($name[$row]);
+        } else if ($column == 1) {
+            return Table::createValueStr($age[$row]);
         } else {
-            return Table::createValueStr((string)$age[$row]);
+            return Table::createValueStr($btn[$row]);
         }
     }
 );
@@ -53,8 +50,10 @@ $table = Table::create($tableModel, -1);
 Table::appendTextColumn($table, "姓名", 0, -1);
 // 表格追加文本列
 Table::appendTextColumn($table, "年龄", 1, -1);
-// 追加表格到盒子
-Box::append($box, $table, false);
+// 表格追加按钮列
+Table::appendButtonColumn($table, "操作", 2, -1);
+
+Window::setChild($window, $table); // 设置窗口子元素
 
 // 显示控件
 Control::show($window);
