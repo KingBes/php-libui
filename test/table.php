@@ -25,10 +25,10 @@ Window::onClosing($window, function ($window) {
 
 // 创建表格模型处理程序
 $modelHandler = Table::modelHandler(
-    2,
-    TableValueType::String,
-    3,
-    function ($handler, $row, $column) {
+    3, // 列数
+    TableValueType::String, // 列类型
+    3, // 行数
+    function ($handler, $row, $column) { // 单元格值获取回调
         $name = ["小李", "小成", "多多"];
         $age = ["18", "20", "32"];
         $btn = ["编辑", "编辑", "编辑"];
