@@ -324,7 +324,7 @@ class Table extends Base
      * @param string $name 列名称
      * @param int $checkboxModelColumn 复选框模型列
      * @param int $textModelColumn 文本模型列
-     * @param int $textEditableModelColumn 可编辑文本模型列
+     * @param bool $textEditableModelColumn 可编辑文本模型列
      * @param bool $textParams 文本列是否可编辑 默认:false 不可编辑
      * @return void
      */
@@ -370,14 +370,14 @@ class Table extends Base
      * @param CData $model 表格模型
      * @param string $name 列名称
      * @param int $buttonModelColumn 按钮模型列
-     * @param int $buttonClickableModelColumn 按钮可点击模型列
+     * @param bool $buttonClickableModelColumn 按钮可点击模型列
      * @return void
      */
     public static function appendButtonColumn(
         CData $model,
         string $name,
         int $buttonModelColumn,
-        int $buttonClickableModelColumn
+        bool $buttonClickableModelColumn
     ): void {
         self::ffi()->uiTableAppendButtonColumn($model, $name, $buttonModelColumn, $buttonClickableModelColumn);
     }
