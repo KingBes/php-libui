@@ -138,9 +138,9 @@ class Table extends Base
     /**
      * 创建表格模型处理程序
      *
-     * @param int $NumColumns 列数
+     * @param int $NumColumns 显示列数
      * @param TableValueType $ColumnType 列类型
-     * @param int $NumRows 行数
+     * @param int $NumRows 显示行数
      * @param callable:CData $CellValue 单元格值回调
      * @param callable|null $SetCellValue 单元格值设置回调
      * 
@@ -226,25 +226,26 @@ class Table extends Base
      * @param CData $model 表格模型
      * @param string $name 列名称
      * @param int $textModelColumn 文本模型列
-     * @param int $textEditableModelColumn 可编辑文本模型列
-     * @param int $textParams 文本列可选参数
+     * @param bool $textEditableModelColumn = flase 可编辑文本模型列
+     * @param bool $textParams 文本列是否可编辑 默认:false 不可编辑
+     * 
      * @return void
      */
     public static function appendTextColumn(
         CData $model,
         string $name,
         int $textModelColumn,
-        int $textEditableModelColumn,
-        int $textParams = -1
+        bool $textEditableModelColumn,
+        bool $textParams = false
     ): void {
         $c_textParamsStruct = self::ffi()->new("uiTableTextColumnOptionalParams");
-        $c_textParamsStruct->ColorModelColumn = $textParams;
+        $c_textParamsStruct->ColorModelColumn = $textParams == false ? -1 : 0;
         $c_textParams = self::ffi()->cast("uiTableTextColumnOptionalParams [1]", $c_textParamsStruct);
         self::ffi()->uiTableAppendTextColumn(
             $model,
             $name,
             $textModelColumn,
-            $textEditableModelColumn,
+            $textEditableModelColumn == false ? -1 : 0,
             $c_textParams
         );
     }
@@ -269,16 +270,29 @@ class Table extends Base
      * @param string $name 列名称
      * @param int $imageModelColumn 图片模型列
      * @param int $textModelColumn 文本模型列
-     * @param int $textEditableModelColumn 可编辑文本模型列
-     * @param int $textParams 文本列可选参数
+     * @param bool $textEditableModelColumn = flase 可编辑文本模型列
+     * @param bool $textParams 文本列是否可编辑 默认:false 不可编辑
      * @return void
      */
-    public static function appendImageTextColumn(CData $model, string $name, int $imageModelColumn, int $textModelColumn, int $textEditableModelColumn, int $textParams = -1): void
-    {
+    public static function appendImageTextColumn(
+        CData $model,
+        string $name,
+        int $imageModelColumn,
+        int $textModelColumn,
+        bool $textEditableModelColumn,
+        bool $textParams = false
+    ): void {
         $c_textParamsStruct = self::ffi()->new("uiTableTextColumnOptionalParams");
-        $c_textParamsStruct->ColorModelColumn = $textParams;
+        $c_textParamsStruct->ColorModelColumn = $textParams == false ? -1 : 0;
         $c_textParams = self::ffi()->cast("uiTableTextColumnOptionalParams [1]", $c_textParamsStruct);
-        self::ffi()->uiTableAppendImageTextColumn($model, $name, $imageModelColumn, $textModelColumn, $textEditableModelColumn, $c_textParams);
+        self::ffi()->uiTableAppendImageTextColumn(
+            $model,
+            $name,
+            $imageModelColumn,
+            $textModelColumn,
+            $textEditableModelColumn == false ? -1 : 0,
+            $c_textParams
+        );
     }
 
     /**
@@ -286,7 +300,7 @@ class Table extends Base
      *
      * @param CData $model 表格模型
      * @param string $name 列名称
-     * @param int $checkboxModelColumn 复选框模型列
+     * @param int $checkboxModelColumn 复选框模型列 -1为 自身复选框
      * @return void
      */
     public static function appendCheckboxColumn(
@@ -311,15 +325,30 @@ class Table extends Base
      * @param int $checkboxModelColumn 复选框模型列
      * @param int $textModelColumn 文本模型列
      * @param int $textEditableModelColumn 可编辑文本模型列
-     * @param int $textParams 文本列可选参数
+     * @param bool $textParams 文本列是否可编辑 默认:false 不可编辑
      * @return void
      */
-    public static function appendCheckboxTextColumn(CData $model, string $name, int $checkboxModelColumn, int $textModelColumn, int $textEditableModelColumn, int $textParams = -1): void
-    {
+    public static function appendCheckboxTextColumn(
+        CData $model,
+        string $name,
+        int $checkboxModelColumn,
+        bool $checkboxEditableModelColumn,
+        int $textModelColumn,
+        bool $textEditableModelColumn,
+        bool $textParams = false
+    ): void {
         $c_textParamsStruct = self::ffi()->new("uiTableTextColumnOptionalParams");
-        $c_textParamsStruct->ColorModelColumn = $textParams;
+        $c_textParamsStruct->ColorModelColumn = $textParams == false ? -1 : 0;
         $c_textParams = self::ffi()->cast("uiTableTextColumnOptionalParams [1]", $c_textParamsStruct);
-        self::ffi()->uiTableAppendCheckboxTextColumn($model, $name, $checkboxModelColumn, $textModelColumn, $textEditableModelColumn, $c_textParams);
+        self::ffi()->uiTableAppendCheckboxTextColumn(
+            $model,
+            $name,
+            $checkboxModelColumn,
+            $checkboxEditableModelColumn == false ? -1 : 0,
+            $textModelColumn,
+            $textEditableModelColumn == false ? -1 : 0,
+            $c_textParams
+        );
     }
 
     /**

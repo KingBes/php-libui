@@ -6,6 +6,7 @@ use FFI\CData;
 
 class Image extends Base
 {
+
     /**
      * 创建图片
      *
@@ -33,14 +34,25 @@ class Image extends Base
      * 追加图片数据
      *
      * @param CData $image 图片句柄
-     * @param CData $pixels 图片数据
+     * @param string $pixels 图片数据
      * @param int $pixelWidth 图片宽度
      * @param int $pixelHeight 图片高度
-     * @param int $byteStride 图片数据行字节数
      * @return void
      */
-    public static function append(CData $image, CData $pixels, int $pixelWidth, int $pixelHeight, int $byteStride): void    
-    {
-        self::ffi()->uiImageAppend($image, $pixels, $pixelWidth, $pixelHeight, $byteStride);
+    public static function append(
+        CData $image,
+        string $pathFile,
+        int $pixelWidth,
+        int $pixelHeight
+    ): void {
+        $byteStride = $pixelWidth * 4;
+        $imageData = file_get_contents($pathFile);
+        self::ffi()->uiImageAppend(
+            $image,
+            $imageData,
+            $pixelWidth,
+            $pixelHeight,
+            $byteStride
+        );
     }
 }
