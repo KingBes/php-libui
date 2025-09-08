@@ -307,13 +307,13 @@ class Table extends Base
         CData $model,
         string $name,
         int $checkboxModelColumn,
-        int $checkboxEditableModelColumn = -1
+        bool $checkboxEditableModelColumn = false
     ): void {
         self::ffi()->uiTableAppendCheckboxColumn(
             $model,
             $name,
             $checkboxModelColumn,
-            $checkboxEditableModelColumn
+            $checkboxEditableModelColumn == false ? -1 : 0
         );
     }
 
