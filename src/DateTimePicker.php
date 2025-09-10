@@ -18,8 +18,7 @@ class DateTimePicker extends Base
      * 获取时间
      *
      * @param CData $dateTimePicker 日期时间选择器句柄
-     * @param CData $time 时间结构体指针
-     * @return DateTime
+     * @return DateTime 时间类
      */
     public static function time(CData $dateTimePicker): DateTime
     {
