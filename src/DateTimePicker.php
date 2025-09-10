@@ -14,29 +14,53 @@ use \FFI\CData;
  */
 class DateTimePicker extends Base
 {
-
     /**
      * 获取时间
      *
      * @param CData $dateTimePicker 日期时间选择器句柄
      * @param CData $time 时间结构体指针
-     * @return void
+     * @return DateTime
      */
-    public static function time(CData $dateTimePicker, CData $time)
+    public static function time(CData $dateTimePicker): DateTime
     {
-        self::ffi()->uiDateTimePickerTime($dateTimePicker, $time);
+        $c_tm = self::ffi()->new("struct tm [1]");
+        self::ffi()->uiDateTimePickerTime($dateTimePicker, $c_tm);
+        $tm = new DateTime(
+            $c_tm[0]->tm_sec,
+            $c_tm[0]->tm_min,
+            $c_tm[0]->tm_hour,
+            $c_tm[0]->tm_mday,
+            $c_tm[0]->tm_mon + 1,
+            $c_tm[0]->tm_year + 1900,
+            $c_tm[0]->tm_wday + 1,
+            $c_tm[0]->tm_yday,
+            $c_tm[0]->tm_isdst,
+        );
+        unset($c_tm);
+        return $tm;
     }
 
     /**
      * 设置时间
      *
      * @param CData $dateTimePicker 日期时间选择器句柄
-     * @param CData $time 时间结构体指针
+     * @param DateTime $time 时间类
      * @return void
      */
-    public static function setTime(CData $dateTimePicker, CData $time)
+    public static function setTime(CData $dateTimePicker, DateTime $time)
     {
-        self::ffi()->uiDateTimePickerSetTime($dateTimePicker, $time);
+        $c_tm = self::ffi()->new("struct tm [1]");
+        $c_tm[0]->tm_sec = $time->sec;
+        $c_tm[0]->tm_min = $time->min;
+        $c_tm[0]->tm_hour = $time->hour;
+        $c_tm[0]->tm_mday = $time->mday;
+        $c_tm[0]->tm_mon = $time->mon - 1;
+        $c_tm[0]->tm_year = $time->year - 1900;
+        $c_tm[0]->tm_wday = $time->wday - 1;
+        $c_tm[0]->tm_yday = $time->yday;
+        $c_tm[0]->tm_isdst = $time->isdst;
+        self::ffi()->uiDateTimePickerSetTime($dateTimePicker, $c_tm);
+        unset($c_tm);
     }
 
     /**
@@ -51,7 +75,7 @@ class DateTimePicker extends Base
         self::ffi()->uiDateTimePickerOnChanged(
             $dateTimePicker,
             function ($d, $dd) use ($dateTimePicker, $callback) {
-                $callback($dateTimePicker);
+                return $callback($dateTimePicker);
             },
             null
         );
