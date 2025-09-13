@@ -85,6 +85,6 @@ class Menu extends Base
      */
     public static function create(string $name): CData
     {
-        return self::ffi()->uiMenuNew($name);
+        return self::ffi()->uiNewMenu($name);
     }
 }

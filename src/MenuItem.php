@@ -43,7 +43,7 @@ class MenuItem extends Base
         self::ffi()->uiMenuItemOnClicked(
             $item,
             function ($s, $w, $d) use ($callback, $item) {
-                $callback($item);
+                $callback($item, $w);
             },
             null
         );
