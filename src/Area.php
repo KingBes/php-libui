@@ -11,12 +11,56 @@ class Area extends Base
 {
     /**
      * 创建区域处理程序
+     * 
+     * 区域处理程序用于处理区域的绘制、键盘事件、鼠标事件、鼠标跨域事件和拖动中断事件。
+     * 
+     * @param callable<$handler> $draw 绘制回调函数
+     * @param callable<$handler, CData, CData>|null $KeyEvent 键盘事件回调函数
+     * @param callable<$handler, CData, CData>|null $MouseEvent 鼠标事件回调函数
+     * @param callable<$handler, CData, int>|null $MouseCrossed 鼠标跨域事件回调函数
+     * @param callable<$handler, CData>|null $DragBroken 拖动中断事件回调函数
      *
      * @return CData
      */
-    public static function handler(): CData
-    {
-        return self::ffi()->new("uiAreaHandler");
+    public static function handler(
+        callable $draw,
+        callable|null $KeyEvent = null,
+        callable|null $MouseEvent = null,
+        callable|null $MouseCrossed = null,
+        callable|null $DragBroken = null,
+    ): CData {
+        $uiAreaHandler = self::ffi()->new("uiAreaHandler [1]");
+        $c_draw = function ($uiAreaHandler, $area, $params) use ($draw) {
+            $draw($uiAreaHandler);
+        };
+        $uiAreaHandler[0]->Draw = $c_draw;
+
+        if ($KeyEvent) {
+            $c_KeyEvent = function ($uiAreaHandler  , $area, $keyEvent) use ($KeyEvent) {
+                return $KeyEvent($uiAreaHandler , $area, $keyEvent);
+            };
+            $uiAreaHandler[0]->KeyEvent = $c_KeyEvent;
+        }
+
+        if ($MouseEvent) {
+            $c_MouseEvent = function ($uiAreaHandler, $area, $mouseEvent) use ($MouseEvent) {
+                $MouseEvent($uiAreaHandler, $area, $mouseEvent);
+            };
+            $uiAreaHandler[0]->MouseEvent = $c_MouseEvent;
+        }
+        if ($MouseCrossed) {
+            $c_MouseCrossed = function ($uiAreaHandler, $area, $left) use ($MouseCrossed) {
+                $MouseCrossed($uiAreaHandler, $area, $left);
+            };
+            $uiAreaHandler[0]->MouseCrossed = $c_MouseCrossed;
+        }
+        if ($DragBroken) {
+            $c_DragBroken = function ($uiAreaHandler, $area) use ($DragBroken) {
+                $DragBroken($uiAreaHandler, $area);
+            };
+            $uiAreaHandler[0]->DragBroken = $c_DragBroken;
+        }
+        return $uiAreaHandler;
     }
 
     /**
@@ -95,7 +139,7 @@ class Area extends Base
      */
     public static function create(CData $ah): CData
     {
-        return self::ffi()->uiAreaCreate($ah);
+        return self::ffi()->uiNewArea($ah);
     }
 
     /**
@@ -108,6 +152,36 @@ class Area extends Base
      */
     public static function createScroll(CData $ah, int $width, int $height): CData
     {
-        return self::ffi()->uiNewScrollingArea($ah, $width, $height);
+        $c_ah = self::ffi()->cast("uiAreaHandler *", $ah);
+        return self::ffi()->uiNewScrollingArea($c_ah, $width, $height);
+    }
+
+    /**
+     * 创建区域绘画参数
+     *
+     * @param float $AreaWidth 区域宽度
+     * @param float $AreaHeight 区域高度
+     * @param float $ClipX 裁剪区域左坐标
+     * @param float $ClipY 裁剪区域上坐标
+     * @param float $ClipWidth 裁剪区域宽度
+     * @param float $ClipHeight 裁剪区域高度
+     * @return CData
+     */
+    public static function createDrawParams(
+        float $AreaWidth = 0.0,
+        float $AreaHeight = 0.0,
+        float $ClipX = 0.0,
+        float $ClipY = 0.0,
+        float $ClipWidth = 0.0,
+        float $ClipHeight = 0.0
+    ): CData {
+        $drawParams = self::ffi()->new("uiAreaDrawParams");
+        $drawParams->AreaWidth = $AreaWidth;
+        $drawParams->AreaHeight = $AreaHeight;
+        $drawParams->ClipX = $ClipX;
+        $drawParams->ClipY = $ClipY;
+        $drawParams->ClipWidth = $ClipWidth;
+        $drawParams->ClipHeight = $ClipHeight;
+        return $drawParams;
     }
 }

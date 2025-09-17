@@ -72,14 +72,14 @@ class Button extends Base
     /**
      * 字体按钮字体改变事件
      *
-     * @param CData $b 字体按钮句柄
+     * @param CData $btn 字体按钮句柄
      * @param callable $callback 回调函数
      * @return void
      */
     public static function onFontChanged(CData $btn, callable $callback): void
     {
         self::ffi()->uiFontButtonOnChanged(
-            $b,
+            $btn,
             function ($b, $d) use ($callback, $btn) {
                 $callback($btn);
             },

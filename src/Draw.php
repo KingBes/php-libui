@@ -204,14 +204,15 @@ class Draw extends Base
     /**
      * 填充路径
      *
-     * @param CData $c 上下文句柄
+     * @param CData $params 区域绘画参数
      * @param CData $path 路径句柄
      * @param CData $brush 画笔句柄
      * @return void
      */
-    public static function fill(CData $c, CData $path, CData $brush): void
+    public static function fill(CData $params, CData $path, CData $brush): void
     {
-        self::ffi()->uiDrawFill($c, $path, $brush);
+        var_dump($params);
+        self::ffi()->uiDrawFill($params->Context, $path, $brush);
     }
 
     /**
@@ -447,5 +448,133 @@ class Draw extends Base
     public static function textLayoutExtents(CData $tl, float $width, float $height): void
     {
         self::ffi()->uiDrawTextLayoutExtents($tl, $width, $height);
+    }
+
+    /**
+     * 创建矩阵
+     *
+     * @param float $m11 矩阵M11
+     * @param float $m12 矩阵M12
+     * @param float $m21 矩阵M21
+     * @param float $m22 矩阵M22
+     * @param float $M31 矩阵M31
+     * @param float $M32 矩阵M32
+     * @return CData 矩阵句柄
+     */
+    public static function createMatrix(float $m11, float $m12, float $m21, float $m22, float $M31, float $M32): CData
+    {
+        $uiDrawMatrix = self::ffi()->new("uiDrawMatrix");
+        $uiDrawMatrix->M11 = $m11;
+        $uiDrawMatrix->M12 = $m12;
+        $uiDrawMatrix->M21 = $m21;
+        $uiDrawMatrix->M22 = $m22;
+        $uiDrawMatrix->M31 = $M31;
+        $uiDrawMatrix->M32 = $M32;
+        $c_uiDrawMatrix = self::ffi()->cast("uiDrawMatrix *", $uiDrawMatrix);
+        return $c_uiDrawMatrix;
+    }
+
+    /**
+     * 创建画笔渐变停止
+     *
+     * @param float $pos 位置 
+     * @param float $r 红色通道值
+     * @param float $g 绿色通道值
+     * @param float $b 蓝色通道值
+     * @param float $a 透明度通道值
+     * @return CData 画笔渐变停止句柄
+     */
+    public static function createBrushGradientStop(float $pos, float $r, float $g, float $b, float $a): CData
+    {
+        $uiDrawBrushGradientStop = self::ffi()->new("uiDrawBrushGradientStop");
+        $uiDrawBrushGradientStop->Pos = $pos;
+        $uiDrawBrushGradientStop->R = $r;
+        $uiDrawBrushGradientStop->G = $g;
+        $uiDrawBrushGradientStop->B = $b;
+        $uiDrawBrushGradientStop->A = $a;
+        $c_uiDrawBrushGradientStop = self::ffi()->cast("uiDrawBrushGradientStop *", $uiDrawBrushGradientStop);
+        return $c_uiDrawBrushGradientStop;
+    }
+
+    /**
+     * 创建画笔
+     *
+     * @param DrawBrushType $type 画笔类型 0:Solid 1:Linear 2:Radial 3:image
+     * @param float $r 红色通道值
+     * @param float $g 绿色通道值
+     * @param float $b 蓝色通道值
+     * @param float $a 透明度通道值
+     * @param float $x0 线性渐变开始X坐标，径向渐变开始X坐标
+     * @param float $y0 线性渐变开始Y坐标，径向渐变开始Y坐标
+     * @param float $x1 线性渐变结束X坐标，径向渐变外圆中心X坐标
+     * @param float $y1 线性渐变结束Y坐标，径向渐变外圆中心Y坐标
+     * @param float $outerRadius 径向渐变外圆半径
+     * @param CData $Stops 画笔渐变停止句柄数组
+     * @param integer $numStops 画笔渐变停止句柄数组长度
+     * @return CData
+     */
+    public static function createBrush(
+        DrawBrushType $type,
+        float $r = 0.0,
+        float $g = 0.0,
+        float $b = 0.0,
+        float $a = 1.0,
+        float $x0 = 0.0,
+        float $y0 = 0.0,
+        float $x1 = 0.0,
+        float $y1 = 0.0,
+        float $outerRadius = 0.0,
+        CData|null $Stops = null,
+        int $numStops = 0
+    ): CData {
+        $uiDrawBrush = self::ffi()->new("uiDrawBrush");
+        $uiDrawBrush->Type = $type->value;
+        $uiDrawBrush->R = $r;
+        $uiDrawBrush->G = $g;
+        $uiDrawBrush->B = $b;
+        $uiDrawBrush->A = $a;
+        $uiDrawBrush->X0 = $x0;
+        $uiDrawBrush->Y0 = $y0;
+        $uiDrawBrush->X1 = $x1;
+        $uiDrawBrush->Y1 = $y1;
+        $uiDrawBrush->OuterRadius = $outerRadius;
+        if ($Stops !== null) {
+            $uiDrawBrush->Stops = $Stops;
+        }
+        $uiDrawBrush->NumStops = $numStops;
+        $c_uiDrawBrush = self::ffi()->cast("uiDrawBrush *", $uiDrawBrush);
+        return $c_uiDrawBrush;
+    }
+
+    /**
+     * 创建画笔描边参数
+     *
+     * @param DrawLineCap $cap 画笔描边结束线帽类型 0:flat 1:round 2:square
+     * @param DrawLineJoin $join 画笔描边交点类型 0:miter 1:round 2:bevel
+     * @param DrawLineJoin $join1 画笔描边交点类型1
+     * @param float $thickness 画笔描边宽度
+     * @param float $miterLimit 画笔描边交点类型为Miter时的最大斜接长度
+     * @param integer $numDashes 画笔描边虚线数量
+     * @param float $DashPhase 画笔描边虚线相位
+     * @param float ...$Dashes 画笔描边虚线数组
+     * @return CData
+     */
+    public static function createStrokeParams(DrawLineCap $cap, DrawLineJoin $join, DrawLineJoin $join1, float $thickness, float $miterLimit, int $numDashes, float $DashPhase, float ...$Dashes): CData
+    {
+        $uiDrawStrokeParams = self::ffi()->new("uiDrawStrokeParams");
+        $uiDrawStrokeParams->Cap = $cap->value;
+        $uiDrawStrokeParams->Join = $join->value;
+        $uiDrawStrokeParams->Join1 = $join1->value;
+        $uiDrawStrokeParams->Thickness = $thickness;
+        $uiDrawStrokeParams->MiterLimit = $miterLimit;
+        $uiDrawStrokeParams->DashPhase = $DashPhase;
+        $uiDrawStrokeParams->NumDashes = $numDashes;
+        $c_Dashes = self::ffi()->new("double[" . count($Dashes) . "]");
+        for ($i = 0; $i < count($Dashes); $i++) {
+            $c_Dashes[$i] = $Dashes[$i];
+        }
+        $uiDrawStrokeParams->Dashes = $c_Dashes;
+        $c_uiDrawStrokeParams = self::ffi()->cast("uiDrawStrokeParams *", $uiDrawStrokeParams);
+        return $c_uiDrawStrokeParams;
     }
 }
