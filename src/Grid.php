@@ -36,7 +36,8 @@ class Grid extends Base
      */
     public static function append(CData $g, CData $c, int $left, int $top, int $xspan, int $yspan, int $hexpand, int $halign, int $vexpand, Align $valign)
     {
-        self::ffi()->uiGridAppend($g, $c, $left, $top, $xspan, $yspan, $hexpand, $halign, $vexpand, $valign->value);
+        $control = self::ffi()->cast("uiControl *", $c);
+        self::ffi()->uiGridAppend($g, $control, $left, $top, $xspan, $yspan, $hexpand, $halign, $vexpand, $valign->value);
     }
 
     /**
