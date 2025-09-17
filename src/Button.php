@@ -109,18 +109,19 @@ class Button extends Base
     }
 
     /**
-     * 颜色按钮
+     * 获取颜色按钮
      *
-     * @param CData $b 颜色按钮句柄
-     * @param float $r 红色
-     * @param float $g 绿色
-     * @param float $b 蓝色
-     * @param float $a 透明度
-     * @return void
+     * @param CData $btn 颜色按钮句柄
+     * @return object
      */
-    public static function color(CData $btn, float $r, float $g, float $b, float $a): void
+    public static function color(CData $btn): object
     {
+        $r = self::ffi()->new("double [1]");
+        $g = self::ffi()->new("double [1]");
+        $b = self::ffi()->new("double [1]");
+        $a = self::ffi()->new("double [1]");
         self::ffi()->uiColorButtonColor($btn, $r, $g, $b, $a);
+        return (object)["r" => $r[0], "g" => $g[0], "b" => $b[0], "a" => $a[0]];
     }
 
     /**

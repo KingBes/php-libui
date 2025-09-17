@@ -40,7 +40,13 @@ Box::append($box, $btn01, false);
 
 // 创建颜色按钮
 $colorBtn = Button::createColor();
-Button::setColor($colorBtn, 200, 180, 50, 1);
+Button::setColor($colorBtn, 0.2, 0.6, 0.8, 1);
+// 颜色按钮点击事件
+Button::colorOnChanged($colorBtn, function ($colorBtn) {
+    $color = Button::color($colorBtn);
+    var_dump($color);
+});
+
 // 追加颜色按钮到容器
 Box::append($box, $colorBtn, false);
 
