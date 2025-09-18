@@ -7,6 +7,7 @@ use Kingbes\Libui\Window;
 use Kingbes\Libui\Control;
 use Kingbes\Libui\Table;
 use Kingbes\Libui\TableValueType;
+use Kingbes\Libui\Image;
 
 // 初始化应用
 App::init();
@@ -29,6 +30,17 @@ $btn = ["编辑", "编辑", "编辑"];
 $checkbox = [1, 0, 1];
 $checkboxText = [0, 1, 0];
 $progress = [50, 80, 30];
+$img1 = Image::create(32, 32);
+Image::append($img1, __DIR__ . "/libui.png");
+$img2 = Image::create(32, 32);
+Image::append($img2, __DIR__ . "/libui.png");
+$img3 = Image::create(32, 32);
+Image::append($img3, __DIR__ . "/libui.png");
+$image = [
+    $img1,
+    $img2,
+    $img3,
+];
 
 // 创建表格模型处理程序
 $modelHandler = Table::modelHandler(
@@ -42,6 +54,7 @@ $modelHandler = Table::modelHandler(
         &$checkbox,
         &$checkboxText,
         &$progress,
+        &$image,
     ) { // 单元格值获取回调
         if ($column == 0) {
             return Table::createValueStr($name[$row]);
@@ -55,9 +68,15 @@ $modelHandler = Table::modelHandler(
             return Table::createValueInt($checkboxText[$row]);
         } else if ($column == 5) {
             return Table::createValueInt($progress[$row]);
+        } else if ($column == 6) { // 图片列
+            return Table::createValueImg($image[$row]);
         }
     },
-    function ($handler, $row, $column, $v) use (&$checkbox) { // 单元格值设置回调
+    function ($handler, $row, $column, $v) use (&$checkbox, &$age) { // 单元格值设置回调
+
+        if ($column == 1) { // 年龄列
+            $age[$row] = Table::valueStr($v); // 获取年龄
+        }
 
         if ($column == 3) { // 复选框列
             $checkbox[$row] = Table::valueInt($v); // 获取复选框值
@@ -80,6 +99,8 @@ Table::appendCheckboxColumn($table, "选择", 3, true);
 Table::appendCheckboxTextColumn($table, "选择列", 4, true, 1, false);
 // 表格追加进度条
 Table::appendProgressBarColumn($table, "进度", 5);
+// 追加图片
+Table::appendImageColumn($table, "图片", 6, true);
 
 Window::setChild($window, $table); // 设置窗口子元素
 
