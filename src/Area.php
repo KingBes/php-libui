@@ -29,37 +29,39 @@ class Area extends Base
         callable|null $MouseCrossed = null,
         callable|null $DragBroken = null,
     ): CData {
-        $uiAreaHandler = self::ffi()->new("uiAreaHandler [1]");
-        $c_draw = function ($uiAreaHandler, $area, $params) use ($draw) {
-            $draw($uiAreaHandler);
+        $uiAreaHandler = self::ffi()->new("uiAreaHandler");
+        $c_draw = function ($h, $area, $params) use ($draw) {
+            $draw($h, $area, $params);
         };
-        $uiAreaHandler[0]->Draw = $c_draw;
+        $uiAreaHandler->Draw = $c_draw;
 
-        if ($KeyEvent) {
-            $c_KeyEvent = function ($uiAreaHandler  , $area, $keyEvent) use ($KeyEvent) {
-                return $KeyEvent($uiAreaHandler , $area, $keyEvent);
-            };
-            $uiAreaHandler[0]->KeyEvent = $c_KeyEvent;
-        }
+        $c_KeyEvent = function ($uiAreaHandler, $area, $keyEvent) use ($KeyEvent) {
+            if ($KeyEvent) {
+                return $KeyEvent($uiAreaHandler, $area, $keyEvent);
+            }
+        };
+        $uiAreaHandler->KeyEvent = $c_KeyEvent;
 
-        if ($MouseEvent) {
-            $c_MouseEvent = function ($uiAreaHandler, $area, $mouseEvent) use ($MouseEvent) {
+        $c_MouseEvent = function ($uiAreaHandler, $area, $mouseEvent) use ($MouseEvent) {
+            if ($MouseEvent) {
                 $MouseEvent($uiAreaHandler, $area, $mouseEvent);
-            };
-            $uiAreaHandler[0]->MouseEvent = $c_MouseEvent;
-        }
-        if ($MouseCrossed) {
-            $c_MouseCrossed = function ($uiAreaHandler, $area, $left) use ($MouseCrossed) {
+            }
+        };
+        $uiAreaHandler->MouseEvent = $c_MouseEvent;
+
+        $c_MouseCrossed = function ($uiAreaHandler, $area, $left) use ($MouseCrossed) {
+            if ($MouseCrossed) {
                 $MouseCrossed($uiAreaHandler, $area, $left);
-            };
-            $uiAreaHandler[0]->MouseCrossed = $c_MouseCrossed;
-        }
-        if ($DragBroken) {
-            $c_DragBroken = function ($uiAreaHandler, $area) use ($DragBroken) {
-                $DragBroken($uiAreaHandler, $area);
-            };
-            $uiAreaHandler[0]->DragBroken = $c_DragBroken;
-        }
+            }
+        };
+        $uiAreaHandler->MouseCrossed = $c_MouseCrossed;
+
+        $c_DragBroken = function ($uiAreaHandler, $area) use ($DragBroken) {
+            if ($DragBroken) {
+                return $DragBroken($uiAreaHandler, $area);
+            }
+        };
+        $uiAreaHandler->DragBroken = $c_DragBroken;
         return $uiAreaHandler;
     }
 
@@ -139,7 +141,8 @@ class Area extends Base
      */
     public static function create(CData $ah): CData
     {
-        return self::ffi()->uiNewArea($ah);
+        $c_ah = self::ffi()::addr($ah);
+        return self::ffi()->uiNewArea($c_ah);
     }
 
     /**
@@ -175,13 +178,14 @@ class Area extends Base
         float $ClipWidth = 0.0,
         float $ClipHeight = 0.0
     ): CData {
-        $drawParams = self::ffi()->new("uiAreaDrawParams");
+        $drawParams = self::ffi()->new("struct uiAreaDrawParams");
         $drawParams->AreaWidth = $AreaWidth;
         $drawParams->AreaHeight = $AreaHeight;
         $drawParams->ClipX = $ClipX;
         $drawParams->ClipY = $ClipY;
         $drawParams->ClipWidth = $ClipWidth;
         $drawParams->ClipHeight = $ClipHeight;
-        return $drawParams;
+        $c_drawParams = self::ffi()::addr($drawParams);
+        return $c_drawParams;
     }
 }

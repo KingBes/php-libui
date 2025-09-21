@@ -25,22 +25,22 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
+
+
 // 创建绘画处理程序
-$areaHandler = Area::handler(function ($handler) {
+$areaHandler = Area::handler(function ($handler, $area, $params) {
     // 创建红色笔刷
     $redBrush = Draw::createBrush(DrawBrushType::Solid, 1.0, 0.0, 0.0, 1.0);
+    
     // 创建方块路径
     $drawPath = Draw::createPath(DrawFillMode::Winding);
     // 绘制一个红色的方块
-    Draw::pathAddRectangle($drawPath, 100, 100, 200, 200);
+    Draw::pathAddRectangle($drawPath, 50, 50, 100, 100);
     // 结束路径定义
     Draw::pathEnd($drawPath);
-    // 区域绘画参数
-    $drawParams = Area::createDrawParams();
     // 填充方块
-    Draw::fill($drawParams, $drawPath, $redBrush);
+    Draw::fill($params[0]->Context, $drawPath, $redBrush);
 });
-
 // 创建绘画区域
 $area = Area::create($areaHandler);
 

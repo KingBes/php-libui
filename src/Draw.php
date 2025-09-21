@@ -209,10 +209,9 @@ class Draw extends Base
      * @param CData $brush 画笔句柄
      * @return void
      */
-    public static function fill(CData $params, CData $path, CData $brush): void
+    public static function fill(CData $context, CData $path, CData $brush): void
     {
-        var_dump($params);
-        self::ffi()->uiDrawFill($params->Context, $path, $brush);
+        self::ffi()->uiDrawFill($context, $path, $brush);
     }
 
     /**
@@ -523,27 +522,22 @@ class Draw extends Base
         float $y0 = 0.0,
         float $x1 = 0.0,
         float $y1 = 0.0,
-        float $outerRadius = 0.0,
-        CData|null $Stops = null,
-        int $numStops = 0
+        float $outerRadius = 0.0
     ): CData {
-        $uiDrawBrush = self::ffi()->new("uiDrawBrush");
-        $uiDrawBrush->Type = $type->value;
-        $uiDrawBrush->R = $r;
-        $uiDrawBrush->G = $g;
-        $uiDrawBrush->B = $b;
-        $uiDrawBrush->A = $a;
-        $uiDrawBrush->X0 = $x0;
-        $uiDrawBrush->Y0 = $y0;
-        $uiDrawBrush->X1 = $x1;
-        $uiDrawBrush->Y1 = $y1;
-        $uiDrawBrush->OuterRadius = $outerRadius;
-        if ($Stops !== null) {
-            $uiDrawBrush->Stops = $Stops;
-        }
-        $uiDrawBrush->NumStops = $numStops;
-        $c_uiDrawBrush = self::ffi()->cast("uiDrawBrush *", $uiDrawBrush);
-        return $c_uiDrawBrush;
+        $uiDrawBrush = self::ffi()::addr(self::ffi()->new("struct uiDrawBrush"));
+        $uiDrawBrushGradientStop = self::ffi()::addr(self::ffi()->new("struct uiDrawBrushGradientStop"));
+        $uiDrawBrush[0]->Type = $type->value;
+        $uiDrawBrush[0]->R = $r;
+        $uiDrawBrush[0]->G = $g;
+        $uiDrawBrush[0]->B = $b;
+        $uiDrawBrush[0]->A = $a;
+        $uiDrawBrush[0]->Stops = $uiDrawBrushGradientStop;
+        $uiDrawBrush[0]->X0 = $x0;
+        $uiDrawBrush[0]->Y0 = $y0;
+        $uiDrawBrush[0]->X1 = $x1;
+        $uiDrawBrush[0]->Y1 = $y1;
+        $uiDrawBrush[0]->OuterRadius = $outerRadius;
+        return $uiDrawBrush;
     }
 
     /**
