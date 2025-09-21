@@ -58,7 +58,7 @@ class Area extends Base
 
         $c_DragBroken = function ($uiAreaHandler, $area) use ($DragBroken) {
             if ($DragBroken) {
-                return $DragBroken($uiAreaHandler, $area);
+                $DragBroken($uiAreaHandler, $area);
             }
         };
         $uiAreaHandler->DragBroken = $c_DragBroken;

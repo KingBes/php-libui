@@ -22,11 +22,12 @@ Window::onClosing($window, function ($window) {
     return 1;   
 });
 
-$image = Image::create(100, 100);
-Image::append($image, __DIR__ . "/libui.png", 100, 100);
+$image = Image::create(32, 32);
+
+Image::append($image, __DIR__ . "/libui.png", 32, 32);
 
 Window::setChild($window, $image); // 设置窗口子元素
-
+// var_dump($image);
 // 显示控件
 Control::show($window);
 // 主循环

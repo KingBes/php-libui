@@ -211,7 +211,7 @@ class Draw extends Base
      */
     public static function fill(CData $context, CData $path, CData $brush): void
     {
-        self::ffi()->uiDrawFill($context, $path, $brush);
+        self::ffi()->uiDrawFill($context[0]->Context, $path, $brush);
     }
 
     /**

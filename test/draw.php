@@ -28,19 +28,29 @@ Window::onClosing($window, function ($window) {
 
 
 // 创建绘画处理程序
-$areaHandler = Area::handler(function ($handler, $area, $params) {
-    // 创建红色笔刷
-    $redBrush = Draw::createBrush(DrawBrushType::Solid, 1.0, 0.0, 0.0, 1.0);
-    
-    // 创建方块路径
-    $drawPath = Draw::createPath(DrawFillMode::Winding);
-    // 绘制一个红色的方块
-    Draw::pathAddRectangle($drawPath, 50, 50, 100, 100);
-    // 结束路径定义
-    Draw::pathEnd($drawPath);
-    // 填充方块
-    Draw::fill($params[0]->Context, $drawPath, $redBrush);
-});
+$areaHandler = Area::handler(
+    function ($handler, $area, $params) { // 绘画处理程序
+        // 创建红色笔刷
+        $redBrush = Draw::createBrush(DrawBrushType::Solid, 1.0, 0.0, 0.0, 1.0);
+
+        // 创建方块路径
+        $drawPath = Draw::createPath(DrawFillMode::Winding);
+        // 绘制一个红色的方块
+        Draw::pathAddRectangle($drawPath, 50, 50, 100, 100);
+        // 结束路径定义
+        Draw::pathEnd($drawPath);
+        // 填充方块
+        Draw::fill($params, $drawPath, $redBrush);
+    },
+    function ($handler, $area, $keyEvent) { // 按键事件
+        var_dump($area, $keyEvent);
+        echo "按键事件";
+    },
+    function ($handler, $area, $mouseEvent) { // 鼠标事件
+        var_dump($area, $mouseEvent);
+        echo "鼠标事件";
+    },
+);
 // 创建绘画区域
 $area = Area::create($areaHandler);
 
