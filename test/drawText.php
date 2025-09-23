@@ -2,7 +2,6 @@
 
 require dirname(__DIR__) . "/vendor/autoload.php";
 
-use Dom\Attr;
 use Kingbes\Libui\App;
 use Kingbes\Libui\Window;
 use Kingbes\Libui\Control;
