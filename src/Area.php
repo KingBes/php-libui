@@ -37,14 +37,14 @@ class Area extends Base
 
         $c_KeyEvent = function ($uiAreaHandler, $area, $keyEvent) use ($KeyEvent) {
             if ($KeyEvent) {
-                return $KeyEvent($uiAreaHandler, $area, $keyEvent);
+                return $KeyEvent($uiAreaHandler, $area, $keyEvent[0]);
             }
         };
         $uiAreaHandler->KeyEvent = $c_KeyEvent;
 
         $c_MouseEvent = function ($uiAreaHandler, $area, $mouseEvent) use ($MouseEvent) {
             if ($MouseEvent) {
-                $MouseEvent($uiAreaHandler, $area, $mouseEvent);
+                $MouseEvent($uiAreaHandler, $area, $mouseEvent[0]);
             }
         };
         $uiAreaHandler->MouseEvent = $c_MouseEvent;

@@ -24,7 +24,7 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
-$name = ["小李", "小成", "多多"];
+$name = ["小李", "小成", "多多🤣"];
 $age = ["18", "20", "32"];
 $btn = ["编辑", "编辑", "编辑"];
 $checkbox = [1, 0, 1];
@@ -70,6 +70,8 @@ $modelHandler = Table::modelHandler(
             return Table::createValueInt($progress[$row]);
         } else if ($column == 6) { // 图片列
             return Table::createValueImg($image[$row]);
+        } else if ($column == 7) { // 图文列
+            return Table::createValueImg($image[$row]);
         }
     },
     function ($handler, $row, $column, $v) use (&$checkbox, &$age) { // 单元格值设置回调
@@ -101,6 +103,8 @@ Table::appendCheckboxTextColumn($table, "选择列", 4, true, 1, false);
 Table::appendProgressBarColumn($table, "进度", 5);
 // 追加图片
 Table::appendImageColumn($table, "图片", 6, true);
+// 追加图文列
+Table::appendImageTextColumn($table, "图文", 6, 0, true);
 
 Window::setChild($window, $table); // 设置窗口子元素
 
