@@ -312,6 +312,20 @@ class Attribute extends Base
     }
 
     /**
+     * 字符串属性设置属性
+     *
+     * @param CData $attrStr 字符串属性句柄
+     * @param CData $attr 属性句柄
+     * @param integer $start 开始位置
+     * @param integer $end 结束位置
+     * @return void
+     */
+    public static function stringSet(CData $attrStr, CData $attr, int $start, int $end): void
+    {
+        self::ffi()->uiAttributedStringSetAttribute($attrStr, $attr, $start, $end);
+    }
+
+    /**
      * 获取字符串属性 grapheme 数量
      *
      * @param CData $attr 属性句柄
