@@ -403,7 +403,7 @@ void uiDrawRestore(uiDrawContext *c);
 typedef struct uiAttribute uiAttribute;
 void uiFreeAttribute(uiAttribute *a);
 int uiAttributeGetType(const uiAttribute *a); // uiAttributeType
-uiAttribute *uiNewFamilyAttribute(const char *family);
+uiAttribute *uiNewFamilyAttribute(char *family);
 const char *uiAttributeFamily(const uiAttribute *a);
 uiAttribute *uiNewSizeAttribute(double size);
 double uiAttributeSize(const uiAttribute *a);
