@@ -178,7 +178,7 @@ class Window extends Base
      */
     public static function openFile(CData $window): string
     {
-        return self::ffi()->uiOpenFile($window) ?: '';
+        return self::ffi()->uiOpenFile($window) ?? '';
     }
 
     /**
@@ -189,7 +189,7 @@ class Window extends Base
      */
     public static function saveFile(CData $window): string
     {
-        return self::ffi()->uiSaveFile($window) ?: '';
+        return self::ffi()->uiSaveFile($window) ?? '';
     }
 
     /**

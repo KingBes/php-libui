@@ -29,8 +29,6 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
-
-
 // 创建绘画处理程序
 $areaHandler = Area::handler(
     function ($handler, $area, $params) { // 绘画处理程序
@@ -56,7 +54,7 @@ $areaHandler = Area::handler(
         // 属性斜体
         $attrItalic = Attribute::createItalic(TextItalic::Italic);
         // 中文字体
-        $attrFont = Attribute::createFamily("宋体");
+        $attrFont = Attribute::createFamily("楷书");
         // 设置中文部分"你好"为斜体 宋体
         Attribute::stringSet($attrStr, $attrItalic, 11, 18); // 设置斜体
         Attribute::stringSet($attrStr, $attrFont, 11, 18); // 设置字体
@@ -75,6 +73,7 @@ $areaHandler = Area::handler(
 
         // emoji 字体
         $attrEmoji = Attribute::createFamily("Segoe UI Emoji");
+        
         // 设置emoji字体
         Attribute::stringSet($attrStr, $attrEmoji, 25, 29); // 设置emoji字体(还是没颜色)
         
