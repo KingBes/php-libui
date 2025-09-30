@@ -101,4 +101,19 @@ class App extends Base
         };
         self::ffi()->uiOnShouldQuit($c_callable, null);
     }
+
+    /**
+     * 定时器
+     *
+     * @param int $milliseconds
+     * @param callable $callable
+     * @return void
+     */
+    public static function timer(int $milliseconds, callable $callable): void
+    {
+        $c_callable = function ($data) use ($callable) {
+            $callable($data);
+        };
+        self::ffi()->uiTimer($milliseconds, $c_callable, null);
+    }
 }

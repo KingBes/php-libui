@@ -554,7 +554,7 @@ class Draw extends Base
      * @param float ...$Dashes 画笔描边虚线数组
      * @return CData
      */
-    public static function createStrokeParams(DrawLineCap $cap, DrawLineJoin $join, DrawLineJoin $join1, float $thickness, float $miterLimit, int $numDashes, float $DashPhase, float ...$Dashes): CData
+    public static function createStrokeParams(DrawLineCap $cap, DrawLineJoin $join, DrawLineJoin $join1, float $thickness = 1.0, float $miterLimit = 0.0, int $numDashes = 0, float $DashPhase = 0.0, float ...$Dashes): CData
     {
         $uiDrawStrokeParams = self::ffi()->new("uiDrawStrokeParams");
         $uiDrawStrokeParams->Cap = $cap->value;
@@ -564,11 +564,13 @@ class Draw extends Base
         $uiDrawStrokeParams->MiterLimit = $miterLimit;
         $uiDrawStrokeParams->DashPhase = $DashPhase;
         $uiDrawStrokeParams->NumDashes = $numDashes;
-        $c_Dashes = self::ffi()->new("double[" . count($Dashes) . "]");
-        for ($i = 0; $i < count($Dashes); $i++) {
-            $c_Dashes[$i] = $Dashes[$i];
+        if ($numDashes > 0) {
+            $c_Dashes = self::ffi()->new("double[" . count($Dashes) . "]");
+            for ($i = 0; $i < count($Dashes); $i++) {
+                $c_Dashes[$i] = $Dashes[$i];
+            }
+            $uiDrawStrokeParams->Dashes = $c_Dashes;
         }
-        $uiDrawStrokeParams->Dashes = $c_Dashes;
         $c_uiDrawStrokeParams = self::ffi()->cast("uiDrawStrokeParams *", $uiDrawStrokeParams);
         return $c_uiDrawStrokeParams;
     }
