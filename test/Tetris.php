@@ -297,6 +297,11 @@ $areaHandler = Area::handler(
         }
     },
     function ($handler, $area, $keyEvent) use (&$gameState) { // 按键事件
+
+        if ($keyEvent->Up) {
+            return 1;
+        }
+
         if ($gameState['gameOver']) {
             // 游戏结束时按R键重新开始
             if ($keyEvent->Key == 'r' || $keyEvent->Key == 'R') {
@@ -351,9 +356,7 @@ function startFallingTimer(&$gameState, $area)
 {
     // 启动自动下落定时器
     App::timer($gameState['speed'], function () use ($area, &$gameState) {
-        var_dump($gameState['gameOver']);
         if (!$gameState['gameOver']) {
-            var_dump("进来了");
             $gameState['currentY']++;
             if (checkCollision($gameState)) {
                 $gameState['currentY']--;
@@ -362,7 +365,6 @@ function startFallingTimer(&$gameState, $area)
             Area::queueRedraw($area);
             startFallingTimer($gameState, $area);
         }
-        var_dump("定时器进来了");
     });
 }
 

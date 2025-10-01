@@ -198,7 +198,8 @@ class Draw extends Base
      */
     public static function Stroke(CData $c, CData $path, CData $brush, CData $params): void
     {
-        self::ffi()->uiDrawStroke($c[0]->Context, $path, $brush, $params);
+        $c_uiDrawStrokeParams = self::ffi()::addr($params);
+        self::ffi()->uiDrawStroke($c[0]->Context, $path, $brush, $c_uiDrawStrokeParams);
     }
 
     /**
@@ -571,8 +572,7 @@ class Draw extends Base
             }
             $uiDrawStrokeParams->Dashes = $c_Dashes;
         }
-        $c_uiDrawStrokeParams = self::ffi()->cast("uiDrawStrokeParams *", $uiDrawStrokeParams);
-        return $c_uiDrawStrokeParams;
+        return $uiDrawStrokeParams;
     }
 
     /**
