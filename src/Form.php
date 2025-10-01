@@ -26,6 +26,17 @@ class Form extends Base
     }
 
     /**
+     * 获取表单子控件数量
+     *
+     * @param CData $f 表单句柄
+     * @return int 子控件数量
+     */
+    public static function numChildren(CData $f): int
+    {
+        return self::ffi()->uiFormNumChildren($f);
+    }
+
+    /**
      * 删除表单项
      *
      * @param CData $f 表单句柄

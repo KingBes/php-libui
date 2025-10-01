@@ -33,6 +33,48 @@ class Window extends Base
     }
 
     /**
+     * 获取窗口位置
+     *
+     * @param CData $window 窗口句柄
+     * @return array
+     */
+    public static function position(CData $window): array
+    {
+        $x = self::ffi()->cast("int*", self::ffi()->new("int"));
+        $y = self::ffi()->cast("int*", self::ffi()->new("int"));
+        self::ffi()->uiWindowPosition($window, $x, $y);
+        return [$x[0], $y[0]];
+    }
+
+    /**
+     * 设置窗口位置
+     *
+     * @param CData $window 窗口句柄
+     * @param int $x 窗口横坐标
+     * @param int $y 窗口纵坐标
+     * @return void
+     */
+    public static function setPosition(CData $window, int $x, int $y): void
+    {
+        self::ffi()->uiWindowSetPosition($window, $x, $y);
+    }
+
+    /**
+     * 窗口位置改变事件
+     *
+     * @param CData $window 窗口句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function onPositionChanged(CData $window, callable $callback): void
+    {
+        $c_callback = function ($w, $d) use ($callback) {
+            return $callback($w);
+        };
+        self::ffi()->uiWindowOnPositionChanged($window, $c_callback, null);
+    }
+
+    /**
      * 设置窗口内容大小
      *
      * @param CData $window 窗口句柄
@@ -168,6 +210,67 @@ class Window extends Base
             return $callback($window);
         };
         self::ffi()->uiWindowOnClosing($window, $c_callback, null);
+    }
+
+    /**
+     * 窗口焦点改变事件
+     *
+     * @param CData $window 窗口句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function onFocusChanged(CData $window, callable $callback): void
+    {
+        $c_callback = function ($w, $d) use ($callback) {
+            return $callback($w);
+        };
+        self::ffi()->uiWindowOnFocusChanged($window, $c_callback, null);
+    }
+
+    /**
+     * 窗口是否有焦点
+     *
+     * @param CData $window 窗口句柄
+     * @return bool 是否有焦点
+     */
+    public static function focused(CData $window): bool
+    {
+        return self::ffi()->uiWindowFocused($window);
+    }
+
+    /**
+     * 窗口是否可调整大小
+     *
+     * @param CData $window 窗口句柄
+     * @return bool 是否可调整大小
+     */
+    public static function resizable(CData $window): bool
+    {
+        return self::ffi()->uiWindowResizable($window);
+    }
+
+    /**
+     * 设置窗口是否可调整大小
+     *
+     * @param CData $windos 窗口句柄
+     * @param boolean $resizeable 是否可调整大小
+     * @return void
+     */
+    public static function setResizeable(CData $windos, bool $resizeable): void
+    {
+        self::ffi()->uiWindowSetResizable($windos, $resizeable ? 1 : 0);
+    }
+
+    /**
+     * 设置窗口是否可调整大小
+     *
+     * @param CData $window 窗口句柄
+     * @param bool $resizable 是否可调整大小
+     * @return void
+     */
+    public static function setResizable(CData $window, bool $resizable): void
+    {
+        self::ffi()->uiWindowSetResizable($window, $resizable ? 1 : 0);
     }
 
     /**

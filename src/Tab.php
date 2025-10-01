@@ -10,6 +10,44 @@ use \FFI\CData;
 class Tab extends Base
 {
     /**
+     * 获取当前选中的标签页索引
+     *
+     * @param CData $tab 标签页句柄
+     * @return int
+     */
+    public static function selected(CData $tab): int
+    {
+        return self::ffi()->uiTabSelected($tab);
+    }
+
+    /**
+     * 设置当前选中的标签页索引
+     *
+     * @param CData $tab 标签页句柄
+     * @param int $index 标签页索引
+     * @return void
+     */
+    public static function setSelected(CData $tab, int $index): void
+    {
+        self::ffi()->uiTabSetSelected($tab, $index);
+    }
+
+    /**
+     * 标签页选中事件
+     *
+     * @param CData $tab 标签页句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function onSelected(CData $tab, callable $callback): void
+    {
+        $c_callback = function ($t, $d) use ($callback) {
+            return $callback($t);
+        };
+        self::ffi()->uiTabOnSelected($tab, $c_callback, null);
+    }
+
+    /**
      * 追加标签页
      *
      * @param CData $tab 标签页句柄

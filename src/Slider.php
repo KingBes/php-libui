@@ -45,6 +45,29 @@ class Slider extends Base
     }
 
     /**
+     * 是否显示工具提示
+     *
+     * @param CData $slider 滑块句柄
+     * @return bool
+     */
+    public static function hasToolTip(CData $slider): bool
+    {
+        return self::ffi()->uiSliderHasToolTip($slider);
+    }
+
+    /**
+     * 设置是否显示工具提示
+     *
+     * @param CData $slider 滑块句柄
+     * @param bool $hasToolTip 是否显示工具提示
+     * @return void
+     */
+    public static function setHasToolTip(CData $slider, bool $hasToolTip): void
+    {
+        self::ffi()->uiSliderSetHasToolTip($slider, $hasToolTip ? 1 : 0);
+    }
+
+    /**
      * 滑块值改变事件
      *
      * @param CData $slider 滑块句柄
@@ -57,5 +80,33 @@ class Slider extends Base
         use ($callback, $slider) {
             $callback($slider);
         }, null);
+    }
+
+    /**
+     * 滑块值释放事件
+     *
+     * @param CData $slider 滑块句柄
+     * @param callable $callback 回调函数
+     * @return void
+     */
+    public static function onReleased(CData $slider, callable $callback): void
+    {
+        self::ffi()->uiSliderOnReleased($slider, function ($s, $d)
+        use ($callback) {
+            $callback($s);
+        }, null);
+    }
+
+    /**
+     * 设置滑块范围
+     *
+     * @param CData $slider 滑块句柄
+     * @param int $min 最小值
+     * @param int $max 最大值
+     * @return void
+     */
+    public static function setRange(CData $slider, int $min, int $max): void
+    {
+        self::ffi()->uiSliderSetRange($slider, $min, $max);
     }
 }

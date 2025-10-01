@@ -31,6 +31,52 @@ class Combobox extends Base
         self::ffi()->uiComboboxAppend($combobox, $text);
     }
 
+    /**
+     * 在指定索引位置添加选项
+     *
+     * @param CData $combobox 下拉列表框句柄
+     * @param int $index 索引位置
+     * @param string $text 选项文本
+     * @return void
+     */
+    public static function insertAt(CData $combobox, int $index, string $text): void
+    {
+        self::ffi()->uiComboboxInsertAt($combobox, $index, $text);
+    }
+
+    /**
+     * 删除指定索引位置的选项
+     *
+     * @param CData $combobox 下拉列表框句柄
+     * @param int $index 索引位置
+     * @return void
+     */
+    public static function delete(CData $combobox, int $index): void
+    {
+        self::ffi()->uiComboboxDelete($combobox, $index);
+    }
+
+    /**
+     * 清空所有选项
+     *
+     * @param CData $combobox 下拉列表框句柄
+     * @return void
+     */
+    public static function clear(CData $combobox): void
+    {
+        self::ffi()->uiComboboxClear($combobox);
+    }
+
+    /**
+     * 获取选项数量
+     *
+     * @param CData $combobox 下拉列表框句柄
+     * @return int 选项数量
+     */
+    public static function numItems(CData $combobox): int
+    {
+        return self::ffi()->uiComboboxNumItems($combobox);
+    }
 
     /**
      * 获取选中项索引
