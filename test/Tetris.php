@@ -10,6 +10,13 @@ use Kingbes\Libui\DrawBrushType;
 use Kingbes\Libui\DrawFillMode;
 use Kingbes\Libui\DrawLineJoin;
 use Kingbes\Libui\DrawLineCap;
+use Kingbes\Libui\Attribute;
+use Kingbes\Libui\TextAlign;
+use Kingbes\Libui\TextWeight;
+use Kingbes\Libui\TextItalic;
+use Kingbes\Libui\TextStretch;
+
+
 
 // 游戏常量
 define('GRID_WIDTH', 10);    // 游戏区域宽度
@@ -283,21 +290,45 @@ $areaHandler = Area::handler(
 
         // 绘制游戏结束信息
         if ($gameState['gameOver']) {
-            $overBrush = Draw::createBrush(DrawBrushType::Solid, 1, 0, 0, 0.8);
-            $overPath = Draw::createPath(DrawFillMode::Winding);
-            Draw::pathAddRectangle(
-                $overPath,
-                GRID_WIDTH * BLOCK_SIZE / 4,
-                GRID_HEIGHT * BLOCK_SIZE / 2 - 30,
-                GRID_WIDTH * BLOCK_SIZE / 2,
-                60
+            // 创建文字属性
+            $text = "游戏结束！按R重新开始";
+            $attrStr = Attribute::createString($text);
+
+            // 设置文字颜色（白色）
+            $whiteColor = Attribute::createColor(1, 1, 1, 1);
+            Attribute::stringSet($attrStr, $whiteColor, 0, strlen($text));
+
+            // 设置字体大小和样式
+            $font = Draw::createFontDesc("Arial", 20.0, TextWeight::Bold, TextItalic::Normal, TextStretch::Normal);
+            $textWidth = GRID_WIDTH * BLOCK_SIZE / 2; // 文本布局宽度
+
+            // 创建文本布局
+            $textLayoutParams = Draw::createTextLayoutParams(
+                $attrStr,
+                $font,
+                $textWidth,
+                TextAlign::Center // 居中对齐
             );
-            Draw::pathEnd($overPath);
-            Draw::fill($params, $overPath, $overBrush);
+            $textLayout = Draw::createTextLayout($textLayoutParams);
+
+            // 计算文本位置（居中显示）
+            $x = GRID_WIDTH * BLOCK_SIZE / 4;
+            $y = GRID_HEIGHT * BLOCK_SIZE / 2 - 15;
+
+            // 绘制半透明黑色背景框（增强文字可读性）
+            $bgBrush = Draw::createBrush(DrawBrushType::Solid, 0, 0, 0, 0.7);
+            $bgPath = Draw::createPath(DrawFillMode::Winding);
+            Draw::pathAddRectangle($bgPath, $x - 20, $y - 10, $textWidth + 40, 40);
+            Draw::pathEnd($bgPath);
+            Draw::fill($params, $bgPath, $bgBrush);
+
+            // 绘制文字
+            Draw::text($params, $textLayout, $x, $y);
         }
     },
     function ($handler, $area, $keyEvent) use (&$gameState) { // 按键事件
 
+        // 按键弹起无效
         if ($keyEvent->Up) {
             return 1;
         }
@@ -311,6 +342,7 @@ $areaHandler = Area::handler(
                 $gameState['speed'] = 1000;
                 spawnNewShape($gameState);
                 Area::queueRedraw($area);
+                startFallingTimer($gameState, $area);
             }
             return 1;
         }
