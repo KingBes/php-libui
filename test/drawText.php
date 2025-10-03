@@ -68,14 +68,18 @@ $areaHandler = Area::handler(
 
         // 设置"世界"的背景色和下划线 紫色
         Attribute::stringSet($attrStr, $attrPurple, 18, 25); // 设置紫色
-        Attribute::stringSet($attrStr, $attrBg, 18, 25); // 设置背景色(无效果，晕死)
+        Attribute::stringSet($attrStr, $attrBg, 18, 25); // 设置背景色
         Attribute::stringSet($attrStr, $attrUnderline, 18, 25); // 设置下划线
 
         // emoji 字体
         $attrEmoji = Attribute::createFamily("Segoe UI Emoji");
+        // 透明颜色
+        $attrTransparent = Attribute::createColor(0.0, 0.0, 0.0, 0.0); // 透明
         
         // 设置emoji字体
-        Attribute::stringSet($attrStr, $attrEmoji, 25, 29); // 设置emoji字体(还是没颜色)
+        Attribute::stringSet($attrStr, $attrEmoji, 25, 29); // 设置emoji字体
+        // 设置emoji字体颜色为透明
+        Attribute::stringSet($attrStr, $attrTransparent, 25, 29); // 设置emoji字体颜色为透明（不然会显示为默认颜色）
         
         // 绘画
         $defaultFont = Draw::createFontDesc("宋体", 24.0, TextWeight::Normal, TextItalic::Normal, TextStretch::Normal); // 创建字体描述符

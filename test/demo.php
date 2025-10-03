@@ -22,7 +22,6 @@ Window::onClosing($window, function ($window) {
     // 返回1：奏效,返回0：不奏效
     return 1;   
 });
-
 // 创建水平容器
 $box = Box::newVerticalBox();
 Box::setPadded($box, true); // 设置边距
