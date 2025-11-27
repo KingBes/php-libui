@@ -73,13 +73,9 @@ $areaHandler = Area::handler(
 
         // emoji 字体
         $attrEmoji = Attribute::createFamily("Segoe UI Emoji");
-        // 透明颜色
-        $attrTransparent = Attribute::createColor(0.0, 0.0, 0.0, 0.0); // 透明
         
         // 设置emoji字体
         Attribute::stringSet($attrStr, $attrEmoji, 25, 29); // 设置emoji字体
-        // 设置emoji字体颜色为透明
-        Attribute::stringSet($attrStr, $attrTransparent, 25, 29); // 设置emoji字体颜色为透明（不然会显示为默认颜色）
         
         // 绘画
         $defaultFont = Draw::createFontDesc("宋体", 24.0, TextWeight::Normal, TextItalic::Normal, TextStretch::Normal); // 创建字体描述符

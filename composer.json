@@ -1,6 +1,6 @@
 {
     "name": "kingbes/libui",
-    "description": "PHP-FFI 绑定 libui，实现跨平台 GUI 编程。",
+    "description": "PHP-FFI 绑定 libui,实现跨平台 GUI 编程。",
     "keywords": [
         "libui",
         "gui",

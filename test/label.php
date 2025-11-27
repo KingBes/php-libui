@@ -23,7 +23,7 @@ Window::onClosing($window, function ($window) {
 });
 
 // 创建标签
-$label = Label::create("这是一个标签");
+$label = Label::create("这是一个标签🤣🧨");
 
 
 // 追加标签到窗口
