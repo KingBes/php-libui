@@ -49,9 +49,9 @@ class Table extends Base
      * 获取字符串表格值
      *
      * @param CData $v 表格值
-     * @return string 字符串
+     * @return string|null 字符串
      */
-    public static function valueStr(CData $v): string
+    public static function valueStr(CData $v): string|null
     {
         return self::ffi()->uiTableValueString($v);
     }

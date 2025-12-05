@@ -75,7 +75,7 @@ $modelHandler = Table::modelHandler(
         }
     },
     function ($handler, $row, $column, $v) use (&$checkbox, &$age) { // 单元格值设置回调
-
+        var_dump($row, $column, $v);
         if ($column == 1) { // 年龄列
             $age[$row] = Table::valueStr($v); // 获取年龄
         }
