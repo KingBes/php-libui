@@ -3,6 +3,7 @@
 require dirname(__DIR__) . "/vendor/autoload.php";
 
 use Kingbes\Libui\App;
+use Kingbes\Libui\SortIndicator;
 use Kingbes\Libui\Window;
 use Kingbes\Libui\Control;
 use Kingbes\Libui\Table;
@@ -24,17 +25,18 @@ Window::onClosing($window, function ($window) {
     return 1;
 });
 
-$name = ["小李", "小成", "多多🤣"];
+$name = ["小李", "小成", "多多"];
 $age = ["18", "20", "32"];
 $btn = ["编辑", "编辑", "编辑"];
 $checkbox = [1, 0, 1];
 $checkboxText = [0, 1, 0];
 $progress = [50, 80, 30];
-$img1 = Image::create(32, 32);
+$width = $height = 48;
+$img1 = Image::create($width, $height);
 Image::append($img1, __DIR__ . "/libui.png");
-$img2 = Image::create(32, 32);
+$img2 = Image::create($width, $height);
 Image::append($img2, __DIR__ . "/libui.png");
-$img3 = Image::create(32, 32);
+$img3 = Image::create($width, $height);
 Image::append($img3, __DIR__ . "/libui.png");
 $image = [
     $img1,
@@ -47,15 +49,7 @@ $modelHandler = Table::modelHandler(
     3, // 列数
     TableValueType::String, // 列类型
     3, // 行数
-    function ($handler, $row, $column) use (
-        &$name,
-        &$age,
-        &$btn,
-        &$checkbox,
-        &$checkboxText,
-        &$progress,
-        &$image,
-    ) { // 单元格值获取回调
+    function ($handler, $row, $column) use (&$name, &$age, &$btn, &$checkbox, &$checkboxText, &$progress, &$image) { // 单元格值获取回调
         if ($column == 0) {
             return Table::createValueStr($name[$row]);
         } else if ($column == 1) {
@@ -70,12 +64,10 @@ $modelHandler = Table::modelHandler(
             return Table::createValueInt($progress[$row]);
         } else if ($column == 6) { // 图片列
             return Table::createValueImg($image[$row]);
-        } else if ($column == 7) { // 图文列
-            return Table::createValueImg($image[$row]);
         }
     },
     function ($handler, $row, $column, $v) use (&$checkbox, &$age) { // 单元格值设置回调
-        var_dump($row, $column, $v);
+        var_dump(['row' => $row, 'column' => $column, 'value' => Table::valueStr($v)]);
         if ($column == 1) { // 年龄列
             $age[$row] = Table::valueStr($v); // 获取年龄
         }
@@ -103,8 +95,20 @@ Table::appendCheckboxTextColumn($table, "选择列", 4, true, 1, false);
 Table::appendProgressBarColumn($table, "进度", 5);
 // 追加图片
 Table::appendImageColumn($table, "图片", 6, true);
-// 追加图文列
-Table::appendImageTextColumn($table, "图文", 6, 0, true);
+
+Table::onHeaderClicked($table, function ($table, $column) {
+    echo "点击表头 {$column}";
+    $sortInfo = Table::headerSortIndicator($table, $column);
+    var_dump($sortInfo->value);
+    switch ($sortInfo->value) {
+        case SortIndicator::Ascending->value:
+            Table::setHeaderSortIndicator($table, $column, SortIndicator::Descending);
+            break;
+        default:
+            Table::setHeaderSortIndicator($table, $column, SortIndicator::Ascending);
+            break;
+    }
+});
 
 Window::setChild($window, $table); // 设置窗口子元素
 

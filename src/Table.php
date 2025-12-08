@@ -420,7 +420,7 @@ class Table extends Base
      */
     public static function setHeaderVisible(CData $table, bool $visible): void
     {
-        self::ffi()->uiTableSetHeaderVisible($table, $visible ? 1 : 0);
+        self::ffi()->uiTableHeaderSetVisible($table, $visible ? 1 : 0);
     }
 
     /**
@@ -435,7 +435,7 @@ class Table extends Base
         $c_callback = function ($t, $row) use ($callback) {
             $callback($t, $row);
         };
-        self::ffi()->uiTableOnRowClicked($table, $c_callback);
+        self::ffi()->uiTableOnRowClicked($table, $c_callback, null);
     }
 
     /**
@@ -450,7 +450,7 @@ class Table extends Base
         $c_callback = function ($t, $row) use ($callback) {
             $callback($t, $row);
         };
-        self::ffi()->uiTableOnRowDoubleClicked($table, $c_callback);
+        self::ffi()->uiTableOnRowDoubleClicked($table, $c_callback, null);
     }
 
     /**
@@ -463,7 +463,7 @@ class Table extends Base
      */
     public static function setHeaderSortIndicator(CData $table, int $column, SortIndicator $direction): void
     {
-        self::ffi()->uiTableSetHeaderSortIndicator($table, $column, $direction->value);
+        self::ffi()->uiTableHeaderSetSortIndicator($table, $column, $direction->value);
     }
 
     /**
@@ -490,7 +490,7 @@ class Table extends Base
         $c_callback = function ($t, $column) use ($callback) {
             $callback($t, $column);
         };
-        self::ffi()->uiTableOnHeaderClicked($table, $c_callback);
+        self::ffi()->uiTableHeaderOnClicked($table, $c_callback, null);
     }
 
     /**
