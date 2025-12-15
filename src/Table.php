@@ -515,7 +515,7 @@ class Table extends Base
      */
     public static function setColumnWidth(CData $table, int $column, int $width): void
     {
-        self::ffi()->uiTableSetColumnWidth($table, $column, $width);
+        self::ffi()->uiTableColumnSetWidth($table, $column, $width);
     }
 
     /**
